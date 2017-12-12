@@ -6,14 +6,18 @@ from bb_request import BBRequests
 bot = telebot.TeleBot(config.token)
 
 
+@bot.message_handler(commands=['boobs', 'butts'])
+def handle_start_help(message):
+    print("CMD " + message.text)
+    command = util.extract_command(message.text)
+    if BBRequests.is_photo_cmd(command):
+        BBRequests.send_image_by_cmd(command, bot, message.chat.id)
+    else:
+        bot.send_message(message.chat.id, 'Wrong comand = ' + command)
+
+
 @bot.message_handler(content_types=['text'])
 def repeat(message):
-    if util.is_command(message.text):
-        print("CMD " + message.text)
-        command = util.extract_command(message.text)
-        if BBRequests.is_photo_cmd(command):
-            BBRequests.send_image_by_cmd(command, bot, message.chat.id)
-    else:
         print(message.text)
         bot.send_message(message.chat.id, message.text)
 
